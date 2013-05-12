@@ -19,14 +19,14 @@ CREATE TABLE Libro(
      Id_lib INT(4) NOT NULL,
      Título VARCHAR(40) NOT NULL,
      Id_tem INT(4) NOT NULL,
-     Id_aut INT(4) NOT NULL
+     Id_aut INT(4) NOT NULL,
+	 Id_eje INT(4) NOT NULL
 );
 CREATE TABLE Ejemplar(
      Id_eje INT(4) NOT NULL,
      Num_orden INT(3) NOT NULL,
      Ubicacion VARCHAR(10) NOT NULL,
-     Disponible VARCHAR(1) NOT NULL,
-     Id_lib INT(4) NOT NULL
+     Disponible VARCHAR(1) NOT NULL
 );
 CREATE TABLE Adquisicion(
      Id_adq INT(4) NOT NULL,
@@ -55,14 +55,14 @@ REFERENCES tema(id_tem) GO;
 ALTER TABLE libro
 ADD CONSTRAINT fk_libro_autor
 FOREIGN KEY (id_aut)
-REFERENCES tema(id_aut) GO;
+REFERENCES tema(id_aut) GO
+ALTER TABLE Libro
+ADD CONSTRAINT fk_libro_ejemplar
+FOREIGN KEY id_eje
+REFERENCES Ejemplar(id_eje) GO;
 ALTER TABLE Ejemplar
 ADD CONSTRAINT pk_ejemplar
 PRIMARY KEY (id_eje) GO;
-ALTER TABLE Ejemplar
-ADD CONSTRAINT fk_ejemplar
-FOREIGN KEY id_lib
-REFERENCES libro(id_lib) GO;
 ALTER TABLE ejemplar
 ADD CONSTRAINT r_disponible
 CHECK (Disponible IN( 'D' , 'N')) GO;
