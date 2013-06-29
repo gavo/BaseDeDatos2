@@ -1,82 +1,91 @@
-CREATE DATABASE Biblioteca;
-use DATABASE BIBLIOTECA;
 CREATE TABLE socio(
-     Id_soc INT(4)  NOT NULL,
-     Nombres VARCHAR(20) NOT NULL,
-     Apellidos VARCHAR(20) NOT NULL,
-     Telefono INT(4),
-     Direccion VARCHAR(50) NOT NULL
+    id_soc NUMERIC(4)  NOT NULL,
+    nombres VARCHAR(20) NOT NULL,
+    apellidos VARCHAR(20) NOT NULL,
+    telefono NUMERIC(4),
+    direccion VARCHAR(50) NOT NULL
 );
 CREATE TABLE tema(
-     Id_tem INT(4) NOT NULL,
-     Nombre VARCHAR(40) NOT NULL
+    id_tem NUMERIC(4) NOT NULL,
+    nombre VARCHAR(40) NOT NULL
 );
-CREATE TABLE Autor(
-     Id_aut INT(4) NOT NULL,
-     Nombre VARCHAR(40) NOT NULL
+CREATE TABLE autor(
+    id_aut NUMERIC(4) NOT NULL,
+    nombre VARCHAR(40) NOT NULL
 );
-CREATE TABLE Libro(
-     Id_lib INT(4) NOT NULL,
-     Título VARCHAR(40) NOT NULL,
-     Id_tem INT(4) NOT NULL,
-     Id_aut INT(4) NOT NULL,
-	 Id_eje INT(4) NOT NULL
+CREATE TABLE libro(
+    id_lib NUMERIC(4) NOT NULL,
+    titulo VARCHAR(40) NOT NULL,
+    id_tem NUMERIC(4) NOT NULL,
+    id_aut NUMERIC(4) NOT NULL,
 );
-CREATE TABLE Ejemplar(
-     Id_eje INT(4) NOT NULL,
-     Num_orden INT(3) NOT NULL,
-     Ubicacion VARCHAR(10) NOT NULL,
-     Disponible VARCHAR(1) NOT NULL
+CREATE TABLE ejemplar(
+    id_eje NUMERIC(4) NOT NULL,
+    id_lib NUMERIC(4) NOT NULL,
+    ubicacion VARCHAR(10) NOT NULL,
+    disponible VARCHAR(1) NOT NULL
 );
-CREATE TABLE Adquisicion(
-     Id_adq INT(4) NOT NULL,
-     Id_eje INT(4) NOT NULL,
-     Id_soc INT(4) NOT NULL,
-     Fecha_prest DATE NOT NULL,
-     Fecha_dev DATE NOT NULL,
-     Estado VARCHAR(1) NOT NULL
+CREATE TABLE adquisicion(
+    id_adq NUMERIC(4) NOT NULL,
+    id_eje NUMERIC(4) NOT NULL,
+    id_soc NUMERIC(4) NOT NULL,
+    fecha_prest DATETIME NOT NULL,
+    fecha_dev DATETIME,
+    estado VARCHAR(1) NOT NULL
 );
 ALTER TABLE socio
 ADD CONSTRAINT pk_socio
-PRIMARY KEY (id_soc) GO;
+PRIMARY KEY (id_soc);
+
 ALTER TABLE tema
 ADD CONSTRAINT pk_tema
-PRIMARY KEY (id_tem)  GO;
+PRIMARY KEY (id_tem);
+
 ALTER TABLE autor
 ADD CONSTRAINT pk_autor
-PRIMARY KEY (id_aut) GO;
+PRIMARY KEY (id_aut);
+
 ALTER TABLE libro
 ADD CONSTRAINT pk_libro
-PRIMARY KEY (id_lib) GO;
+PRIMARY KEY (id_lib);
+
+ALTER TABLE ejemplar
+ADD CONSTRAINT pk_ejemplar
+PRIMARY KEY (id_eje);
+
+ALTER TABLE adquisicion
+ADD CONSTRAINT pk_adquisicion
+PRIMARY KEY (id_adq, id_eje, id_soc);
+
 ALTER TABLE libro
 ADD CONSTRAINT fk_libro_tema
 FOREIGN KEY (id_tem)
-REFERENCES tema(id_tem) GO;
+REFERENCES tema(id_tem);
+
 ALTER TABLE libro
 ADD CONSTRAINT fk_libro_autor
 FOREIGN KEY (id_aut)
-REFERENCES tema(id_aut) GO
-ALTER TABLE Libro
-ADD CONSTRAINT fk_libro_ejemplar
-FOREIGN KEY id_eje
-REFERENCES Ejemplar(id_eje) GO;
-ALTER TABLE Ejemplar
-ADD CONSTRAINT pk_ejemplar
-PRIMARY KEY (id_eje) GO;
+REFERENCES autor(id_aut); 
+
 ALTER TABLE ejemplar
-ADD CONSTRAINT r_disponible
-CHECK (Disponible IN( 'D' , 'N')) GO;
-ALTER TABLE Adquisicion
-ADD CONSTRAINT pk_adquisicion
-PRIMARY KEY (id_adq, id_eje, id_soc) GO;
-ALTER TABLE Adquisicion
+ADD CONSTRAINT fk_ejemplar_libro
+FOREIGN KEY (id_lib)
+REFERENCES libro(id_lib);
+
+ALTER TABLE ejemplar
+ADD CONSTRAINT r_disponible_eje
+CHECK (disponible IN('V','F'));
+
+ALTER TABLE adquisicion
 ADD CONSTRAINT fk_adquicion_ejemp
-FOREIGN KEY id_eje
-REFERENCES Ejemplar(id_eje) GO;
-ALTER TABLE Adquisicion
+FOREIGN KEY (id_eje)
+REFERENCES ejemplar(id_eje);
+
+ALTER TABLE adquisicion
 ADD CONSTRAINT fk_socio
-FOREIGN KEY id_soc
-REFERENCES Socio(id_soc) GO;
-ALTER TABLE Adquisicion
-ADD CONSTRAINT r_disponible
-CHECK (ESTADO IN( 'D' , 'N')) GO;
+FOREIGN KEY (id_soc)
+REFERENCES socio(id_soc);
+
+ALTER TABLE adquisicion
+ADD CONSTRAINT r_disponible_adq
+CHECK (estado IN('V','F'));
